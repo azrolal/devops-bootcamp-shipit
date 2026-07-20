@@ -32,6 +32,12 @@ export function createRaceTrack(container, { me = null } = {}) {
     el.className = 'race-row';
     if (me && s.callsign === me) el.classList.add('me');
     el.title = `@${s.callsign}`;
+    // Deterministic per-callsign phase: ships bob/flicker out of sync without
+    // re-rolling on every update (negative delay = start mid-cycle, no pop).
+    let h = 0;
+    for (const ch of s.callsign) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    el.style.setProperty('--bob-dur', `${(2.6 + (h % 90) / 60).toFixed(2)}s`);
+    el.style.setProperty('--bob-delay', `-${((h >> 4) % 300) / 100}s`);
 
     const rankEl = document.createElement('span'); rankEl.className = 'rank';
     const label = document.createElement('span'); label.className = 'cs';
@@ -56,6 +62,7 @@ export function createRaceTrack(container, { me = null } = {}) {
     if (r.spriteKey === key) return;
     r.spriteKey = key;
     r.glyph.style.color = s.color || NEUTRAL;
+    r.el.style.setProperty('--ship-color', s.color || NEUTRAL);
     shipSprite(s.shipModel, s.color).then((url) => {
       if (disposed || r.spriteKey !== key) return; // stale render — a newer look won
       if (url) { r.img.src = url; r.img.hidden = false; r.glyph.hidden = true; }
