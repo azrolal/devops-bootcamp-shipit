@@ -1,12 +1,15 @@
+# Node / Application
 node_modules/
 dist/
-.DS_Store
-*.log
-.env
-.env.*
-playwright-report/
-test-results/
-.playwright-cli/
 
-# M5: local output of scripts/release-launchpad.sh
-.launchpad-release/
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+!**/.terraform.lock.hcl
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
