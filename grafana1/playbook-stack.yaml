@@ -1,0 +1,30 @@
+- name: Sediakan monitoring stack
+  hosts: node1
+  become: true
+
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - name: Buat folder monitoring
+      file:
+        path: /opt/monitoring
+        state: directory
+        mode: '0755'
+
+    - name: Salin prometheus.yaml
+      copy:
+        src: prometheus.yaml
+        dest: /opt/monitoring/prometheus.yaml
+        mode: '0644'
+
+    - name: Salin compose.yaml
+      copy:
+        src: compose.yaml
+        dest: /opt/monitoring/compose.yaml
+        mode: '0644'
+
+    - name: Jalankan monitoring stack
+      community.docker.docker_compose_v2:
+        project_src: /opt/monitoring
+        state: present
