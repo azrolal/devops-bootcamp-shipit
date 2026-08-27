@@ -7,6 +7,13 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  backend "s3" {
+    bucket       = "bootcamp-2026-azrolali"
+    key          = "final-project/terraform.tfstate"
+    region       = "ap-southeast-1"
+    use_lockfile = true
+  }
 }
 
 provider "aws" {
