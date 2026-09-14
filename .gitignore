@@ -6,6 +6,8 @@ dist/
 **/.terraform/
 **/*.tfstate
 **/*.tfstate.*
+**/*.tfplan
+**/provider-schema.json
 !**/.terraform.lock.hcl
 
 # VS Code
@@ -13,3 +15,6 @@ dist/
 
 # macOS
 .DS_Store
+
+# Python
+.venv/
