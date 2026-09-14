@@ -374,9 +374,26 @@ Monitoring infrastructure menggunakan:
 - Node Exporter
 - Grafana
 
-Prometheus mengambil metrics daripada Node Exporter pada Web Server.
+Prometheus mengambil metrics daripada Node Exporter yang berjalan pada Web Server.
 
-Grafana digunakan untuk visualisation monitoring data.
+Grafana digunakan untuk visualisation monitoring data daripada Prometheus.
+
+---
+
+## Monitoring Containers
+
+Prometheus dan Grafana dijalankan sebagai Docker containers pada Monitoring Server.
+
+![Monitoring Containers](docs/screenshots/08-monitoring/01-monitoring-containers.png)
+
+---
+
+## Prometheus Health
+
+Prometheus health endpoint menunjukkan bahawa Prometheus Server berada dalam keadaan healthy.
+
+```text
+Prometheus Server is Healthy.
 
 ---
 
