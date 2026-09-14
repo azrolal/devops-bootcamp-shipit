@@ -306,17 +306,24 @@ Response ini mengesahkan bahawa application container sedang berjalan dan Nginx 
 
 # 6. CI/CD Pipeline
 
-CI/CD menggunakan GitHub Actions.
+## Overview
 
-Berdasarkan workflow yang tersedia dalam repository, pipeline melakukan:
+CI/CD dalam projek ini menggunakan GitHub Actions untuk mengautomasikan proses Continuous Integration dan Continuous Delivery bagi application.
 
-1. Checkout repository
-2. Setup Node.js
-3. Install dependencies
+GitHub Actions workflow digunakan untuk menjalankan proses berikut secara automatik:
+
+1. Checkout source code daripada GitHub repository
+2. Setup Node.js environment
+3. Install application dependencies
 4. Build application
-5. Run tests
-6. Upload Pages artifact
-7. Deploy GitHub Pages
+5. Run application tests dan pre-flight validation
+6. Upload production build sebagai GitHub Pages artifact
+7. Deploy application menggunakan GitHub Pages
+
+Workflow CI/CD dikonfigurasi dalam repository pada lokasi:
+
+```text
+.github/workflows/deploy.yml
 
 ---
 
@@ -328,7 +335,34 @@ Deployment application menggunakan:
 - Docker
 - Ansible
 
-Ansible melakukan login ke Amazon ECR, pull application image dan menjalankan application container pada Web Server.
+Application Docker image dibina dan disimpan dalam Amazon ECR. Ansible digunakan untuk mengkonfigurasi web server, melakukan login ke Amazon ECR, pull application image dan menjalankan application container.
+
+---
+
+## Deployment Automation
+
+Web server dikonfigurasi menggunakan Ansible dengan roles berikut:
+
+- `common`
+- `docker`
+- `app`
+- `node_exporter`
+
+Deployment dilakukan menggunakan:
+
+```bash
+ansible-playbook site.yml --limit role_web_server
+
+---
+
+## Amazon ECR
+
+Docker image application disimpan dalam Amazon ECR.
+
+Ansible menggunakan AWS CLI untuk mendapatkan authentication token dan melakukan login ke ECR.
+
+```text
+aws ecr get-login-password --region ap-southeast-1
 
 ---
 
