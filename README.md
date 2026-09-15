@@ -35,7 +35,21 @@ Objektif projek ini adalah untuk membina dan menguruskan infrastructure, applica
 
 Bahagian ini menerangkan architecture keseluruhan sistem berdasarkan infrastructure yang telah dibina.
 
-System architecture diagram akan ditambah berdasarkan evidence sebenar.
+![System Architecture](docs/screenshots/02-system-architecture/01-system-architecture.png)
+
+Architecture terdiri daripada:
+
+- AWS VPC
+- Public Subnet
+- Private Subnet
+- Internet Gateway
+- NAT Gateway
+- Ansible Controller
+- Web Server
+- Monitoring Server
+- Amazon ECR
+- Prometheus
+- Grafana
 
 ---
 
