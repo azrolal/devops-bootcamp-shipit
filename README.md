@@ -324,6 +324,7 @@ Workflow CI/CD dikonfigurasi dalam repository pada lokasi:
 
 ```text
 .github/workflows/deploy.yml
+```
 
 ---
 
@@ -335,13 +336,13 @@ Deployment application menggunakan:
 - Docker
 - Ansible
 
-Application Docker image dibina dan disimpan dalam Amazon ECR. Ansible digunakan untuk mengkonfigurasi web server, melakukan login ke Amazon ECR, pull application image dan menjalankan application container.
+Application Docker image dibina dan disimpan dalam Amazon ECR. Ansible digunakan untuk mengkonfigurasi Web Server, melakukan login ke Amazon ECR, pull application image dan menjalankan application container.
 
 ---
 
 ## Deployment Automation
 
-Web server dikonfigurasi menggunakan Ansible dengan roles berikut:
+Web Server dikonfigurasi menggunakan Ansible dengan roles berikut:
 
 - `common`
 - `docker`
@@ -352,6 +353,7 @@ Deployment dilakukan menggunakan:
 
 ```bash
 ansible-playbook site.yml --limit role_web_server
+```
 
 ---
 
@@ -363,6 +365,7 @@ Ansible menggunakan AWS CLI untuk mendapatkan authentication token dan melakukan
 
 ```text
 aws ecr get-login-password --region ap-southeast-1
+```
 
 ---
 
@@ -394,6 +397,33 @@ Prometheus health endpoint menunjukkan bahawa Prometheus Server berada dalam kea
 
 ```text
 Prometheus Server is Healthy.
+```
+
+![Prometheus Healthy](docs/screenshots/08-monitoring/02-prometheus-healthy.png)
+
+---
+
+## Grafana Health
+
+Grafana health endpoint menunjukkan bahawa Grafana Server berada dalam keadaan healthy.
+
+![Grafana Healthy](docs/screenshots/08-monitoring/03-grafana-healthy.png)
+
+---
+
+## Prometheus Target Health
+
+Prometheus berjaya mengambil metrics daripada Node Exporter yang berjalan pada Web Server.
+
+![Prometheus Target Health](docs/screenshots/08-monitoring/04-prometheus-target-health.png)
+
+---
+
+## Grafana Prometheus Datasource
+
+Grafana dikonfigurasi menggunakan Prometheus sebagai datasource untuk visualisation monitoring metrics.
+
+![Grafana Prometheus Datasource](docs/screenshots/08-monitoring/05-grafana-prometheus-datasource.png)
 
 ---
 
@@ -402,8 +432,60 @@ Prometheus Server is Healthy.
 Automation dalam projek ini menggunakan:
 
 - Terraform untuk Infrastructure as Code
-- Ansible untuk Configuration Management dan deployment
+- Ansible untuk Configuration Management dan application deployment
 - GitHub Actions untuk CI/CD workflow
+
+---
+
+## Infrastructure Automation
+
+Terraform digunakan untuk provision AWS infrastructure termasuk:
+
+- VPC
+- Public Subnet
+- Private Subnet
+- Internet Gateway
+- NAT Gateway
+- Route Tables
+- EC2 Instances
+- Security Groups
+
+Infrastructure dikonfigurasi menggunakan Infrastructure as Code.
+
+---
+
+## Configuration and Deployment Automation
+
+Ansible digunakan untuk mengkonfigurasi server dan menjalankan application deployment.
+
+Automation menggunakan Ansible roles untuk:
+
+- Common server configuration
+- Docker installation
+- Application deployment
+- Node Exporter deployment
+- Prometheus deployment
+- Grafana deployment
+
+Deployment dan configuration boleh dijalankan menggunakan Ansible playbook.
+
+---
+
+## CI/CD Automation
+
+GitHub Actions digunakan untuk menjalankan CI/CD workflow.
+
+Workflow akan:
+
+1. Checkout repository
+2. Setup Node.js
+3. Install application dependencies
+4. Build application
+5. Run tests
+6. Upload GitHub Pages artifact
+7. Deploy application ke GitHub Pages
+
+GitHub Actions workflow menyediakan automated build, test dan deployment apabila perubahan dihantar ke repository.
 
 ---
 
@@ -423,15 +505,54 @@ Evidence verification termasuk:
 
 ---
 
+## Ansible Connectivity
+
+Ansible dynamic inventory berjaya mengesan dan berkomunikasi dengan tiga EC2 instances:
+
+- Web Server
+- Monitoring Server
+- Ansible Controller
+
+Ansible menggunakan AWS Systems Manager (SSM) sebagai connection method.
+
+---
+
+## Docker Containers
+
+Web Server diverifikasi menggunakan Docker dan menunjukkan:
+
+- `devops-nginx` application container
+- `node-exporter` monitoring container
+
+Monitoring Server pula menunjukkan:
+
+- `prometheus`
+- `grafana`
+- `cloudflared`
+
+Containers berada dalam keadaan `Up`.
+
+---
+
+## Application Container Status
+
+Application container `devops-nginx` menggunakan image daripada Amazon ECR:
+
+```text
+390709476851.dkr.ecr.ap-southeast-1.amazonaws.com/mazrolmali:latest
+```
+
+---
+
 # URLs
 
 ## Application URL
 
-`ADD_APPLICATION_URL_HERE`
+https://web.openflux.space
 
 ## Monitoring URL
 
-`ADD_MONITORING_URL_HERE`
+https://grafana.openflux.space
 
 ## Repository URL
 
