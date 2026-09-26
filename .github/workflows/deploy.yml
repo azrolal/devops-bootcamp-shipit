@@ -35,17 +35,37 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build website
+      - name: Build application
         run: npm run build
-        
+
       - name: Run tests
         run: npm run test
-        
+
+  documentation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Markdown renderer
+        run: python -m pip install markdown
+
+      - name: Generate documentation site
+        run: |
+          mkdir -p _site
+          python -m markdown README.md -f _site/index.html -x tables -x fenced_code -x toc
+          cp -r docs _site/docs
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: launchpad/dist
+          path: _site
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
