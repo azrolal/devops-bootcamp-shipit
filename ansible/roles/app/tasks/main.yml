@@ -1,0 +1,43 @@
+---
+- name: Install unzip
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+    update_cache: true
+
+- name: Download and extract AWS CLI installer
+  ansible.builtin.unarchive:
+    src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /tmp
+    remote_src: true
+    creates: /tmp/aws/install
+
+- name: Install AWS CLI
+  ansible.builtin.command:
+    cmd: /tmp/aws/install
+    creates: /usr/local/bin/aws
+
+- name: Login to Amazon ECR
+  ansible.builtin.shell:
+    cmd: >
+      aws ecr get-login-password
+      --region ap-southeast-1 |
+      docker login
+      --username AWS
+      --password-stdin
+      390709476851.dkr.ecr.ap-southeast-1.amazonaws.com
+  changed_when: false
+
+- name: Pull application image
+  community.docker.docker_image:
+    name: "{{ app_image }}"
+    source: pull
+
+- name: Run application container
+  community.docker.docker_container:
+    name: "{{ app_container_name }}"
+    image: "{{ app_image }}"
+    state: started
+    restart_policy: "{{ app_restart_policy }}"
+    ports:
+      - "{{ app_host_port }}:{{ app_container_port }}"

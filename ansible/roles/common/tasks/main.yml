@@ -1,0 +1,8 @@
+---
+- name: Create DevOps application directory
+  ansible.builtin.file:
+    path: /opt/devops
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"

@@ -1,0 +1,49 @@
+---
+- name: Create Controller Ansible directory
+  ansible.builtin.file:
+    path: "{{ controller_ansible_path }}"
+    state: directory
+    owner: ssm-user
+    group: ssm-user
+    mode: "0755"
+
+- name: Install Python virtual environment package
+  ansible.builtin.apt:
+    name: python3-venv
+    state: present
+    update_cache: true
+
+- name: Create Controller Python virtual environment
+  ansible.builtin.command:
+    cmd: "python3 -m venv {{ controller_venv_path }}"
+    creates: "{{ controller_venv_path }}/bin/pip"
+
+- name: Install Controller Python packages
+  ansible.builtin.pip:
+    name: "{{ controller_python_packages }}"
+    executable: "{{ controller_venv_path }}/bin/pip"
+
+- name: Install amazon.aws Ansible collection
+  ansible.builtin.command:
+    cmd: >-
+      {{ controller_venv_path }}/bin/ansible-galaxy
+      collection install {{ controller_ansible_collection }}
+    creates: "/home/ssm-user/.ansible/collections/ansible_collections/amazon/aws"
+
+- name: Download AWS Session Manager Plugin package
+  ansible.builtin.get_url:
+    url: "{{ controller_ssm_plugin_deb_url }}"
+    dest: "{{ controller_ssm_plugin_deb_path }}"
+    mode: "0644"
+
+- name: Install AWS Session Manager Plugin
+  ansible.builtin.apt:
+    deb: "{{ controller_ssm_plugin_deb_path }}"
+
+- name: Deploy AWS EC2 dynamic inventory
+  ansible.builtin.copy:
+    src: inventory.aws_ec2.yml
+    dest: "{{ controller_inventory_path }}"
+    owner: ssm-user
+    group: ssm-user
+    mode: "0644"

@@ -1,0 +1,7 @@
+---
+app_name: devops-app
+app_image: 390709476851.dkr.ecr.ap-southeast-1.amazonaws.com/mazrolmali:latest
+app_container_name: devops-nginx
+app_host_port: 80
+app_container_port: 80
+app_restart_policy: unless-stopped

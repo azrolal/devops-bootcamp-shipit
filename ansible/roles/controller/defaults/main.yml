@@ -1,0 +1,14 @@
+---
+controller_venv_path: /opt/devops/ansible-venv
+controller_ansible_path: /opt/devops/ansible
+controller_inventory_path: /opt/devops/ansible/inventory.aws_ec2.yml
+
+controller_python_packages:
+  - ansible
+  - boto3
+  - botocore
+
+controller_ansible_collection: amazon.aws
+
+controller_ssm_plugin_deb_url: "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb"
+controller_ssm_plugin_deb_path: "/tmp/session-manager-plugin.deb"

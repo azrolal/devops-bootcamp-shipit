@@ -1,0 +1,17 @@
+---
+grafana_image: grafana/grafana:latest
+
+grafana_container_name: grafana
+
+grafana_host_port: 3000
+grafana_container_port: 3000
+
+grafana_restart_policy: unless-stopped
+
+grafana_data_volume: grafana-data
+
+monitoring_network: monitoring-network
+
+grafana_provisioning_dir: /opt/grafana/provisioning
+grafana_datasources_dir: /opt/grafana/provisioning/datasources
+grafana_datasource_file: /opt/grafana/provisioning/datasources/prometheus.yml

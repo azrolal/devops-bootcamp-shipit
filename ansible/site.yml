@@ -1,0 +1,53 @@
+---
+- name: Configure Web Server
+  hosts: role_web_server
+  become: true
+
+  tasks:
+    - name: Display hostname
+      ansible.builtin.debug:
+        msg: "Server hostname is {{ ansible_facts['hostname'] }}"
+
+    - name: Display operating system
+      ansible.builtin.debug:
+        msg: >-
+          Operating system is
+          {{ ansible_facts['distribution'] }}
+          {{ ansible_facts['distribution_version'] }}
+
+  roles:
+    - common
+    - docker
+    - app
+    - node_exporter
+
+
+- name: Configure Monitoring Server
+  hosts: role_monitoring_server
+  become: true
+
+  tasks:
+    - name: Display hostname
+      ansible.builtin.debug:
+        msg: "Server hostname is {{ ansible_facts['hostname'] }}"
+
+    - name: Display operating system
+      ansible.builtin.debug:
+        msg: >-
+          Operating system is
+          {{ ansible_facts['distribution'] }}
+          {{ ansible_facts['distribution_version'] }}
+
+  roles:
+    - common
+    - docker
+    - prometheus
+    - grafana
+
+
+- name: Configure Ansible Controller
+  hosts: role_ansible_controller
+  become: true
+
+  roles:
+    - controller

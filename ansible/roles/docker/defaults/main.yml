@@ -1,0 +1,15 @@
+---
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+docker_service_name: docker
+
+docker_apt_arch: amd64
+docker_apt_release: noble
+docker_apt_repository: "https://download.docker.com/linux/ubuntu"
+docker_gpg_path: /etc/apt/keyrings/docker.asc
+docker_gpg_url: "https://download.docker.com/linux/ubuntu/gpg"

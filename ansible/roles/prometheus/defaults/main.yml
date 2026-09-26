@@ -1,0 +1,13 @@
+---
+prometheus_image: prom/prometheus:latest
+prometheus_container_name: prometheus
+prometheus_host_port: 9090
+prometheus_container_port: 9090
+prometheus_restart_policy: unless-stopped
+
+prometheus_config_dir: /opt/prometheus
+prometheus_config_file: /opt/prometheus/prometheus.yml
+
+node_exporter_target: "10.0.0.5:9100"
+
+monitoring_network: monitoring-network

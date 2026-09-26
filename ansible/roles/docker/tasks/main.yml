@@ -1,0 +1,53 @@
+---
+- name: Install Docker repository prerequisites
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+    state: present
+    update_cache: true
+
+- name: Create Docker apt keyrings directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download Docker repository GPG key
+  ansible.builtin.get_url:
+    url: "{{ docker_gpg_url }}"
+    dest: "{{ docker_gpg_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Configure Docker apt repository
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [arch={{ docker_apt_arch }}
+      signed-by={{ docker_gpg_path }}]
+      {{ docker_apt_repository }}
+      {{ docker_apt_release }} stable
+    filename: docker
+    state: present
+    update_cache: true
+
+- name: Install Docker packages
+  ansible.builtin.apt:
+    name: "{{ docker_packages }}"
+    state: present
+    update_cache: true
+
+- name: Add SSM user to Docker group
+  ansible.builtin.user:
+    name: ssm-user
+    groups: docker
+    append: true
+
+- name: Ensure Docker service is enabled and started
+  ansible.builtin.systemd:
+    name: "{{ docker_service_name }}"
+    enabled: true
+    state: started

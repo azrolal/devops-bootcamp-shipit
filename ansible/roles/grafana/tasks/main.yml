@@ -1,0 +1,43 @@
+---
+- name: Create Grafana provisioning directories
+  ansible.builtin.file:
+    path: "{{ grafana_datasources_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy Prometheus datasource provisioning
+  ansible.builtin.template:
+    src: prometheus-datasource.yml.j2
+    dest: "{{ grafana_datasource_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Pull Grafana image
+  community.docker.docker_image:
+    name: "{{ grafana_image }}"
+    source: pull
+
+- name: Create Grafana data volume
+  community.docker.docker_volume:
+    name: "{{ grafana_data_volume }}"
+    state: present
+
+- name: Run Grafana container
+  community.docker.docker_container:
+    name: "{{ grafana_container_name }}"
+    image: "{{ grafana_image }}"
+    state: started
+    restart_policy: "{{ grafana_restart_policy }}"
+
+    ports:
+      - "{{ grafana_host_port }}:{{ grafana_container_port }}"
+
+    volumes:
+      - "{{ grafana_data_volume }}:/var/lib/grafana"
+      - "{{ grafana_provisioning_dir }}:/etc/grafana/provisioning:ro"
+
+    networks:
+      - name: "{{ monitoring_network }}"
