@@ -41,6 +41,10 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Terraform format check
+        working-directory: terraform
+        run: terraform fmt -check -recursive
+
   build-and-push-ecr:
     needs: test
     runs-on: ubuntu-latest
