@@ -1,2 +1,3 @@
 Branch protection policy simulation
 Testing protected branch push
+Verify enforced branch protection
